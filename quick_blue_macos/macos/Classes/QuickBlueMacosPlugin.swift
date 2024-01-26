@@ -236,6 +236,14 @@ extension QuickBlueMacosPlugin: CBPeripheralDelegate {
 
   public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
     print("peripheral:didWriteValueForCharacteristic \(characteristic.uuid.uuidStr) \(characteristic.value as? NSData) error: \(error)")
+    self.messageConnector.sendMessage([
+      "deviceId": peripheral.uuid.uuidString,
+      "wroteCharacteristicValue": [
+        "characteristic": characteristic.uuid.uuidStr,
+        "value": FlutterStandardTypedData(bytes: characteristic.value!),
+        "success": error != nil
+      ]
+    ])
   }
 
   public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
